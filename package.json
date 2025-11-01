@@ -1,7 +1,7 @@
 {
-  "name": "cloudflare-agent-starter",
+  "name": "cf_ai_agents-starter",
   "version": "1.0.0",
-  "description": "",
+  "description": "AI-powered chat agent starter kit using Cloudflare Agents platform",
   "type": "module",
   "private": true,
   "scripts": {

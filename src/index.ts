@@ -48,6 +48,7 @@ export interface Env {
   CHAT_WORKFLOW: Workflow;
   CONVERSATION_DB: D1Database;
   RATE_LIMITER: KVNamespace;
+  ASSETS: { fetch: typeof fetch };
 }
 
 // Workers AI latest Llama 3.1 instruction-tuned model
@@ -766,6 +767,14 @@ export default {
     const agentResponse = await routeAgentRequest(request, env);
     if (agentResponse) {
       return withSecurityHeaders(agentResponse);
+    }
+
+    // For the root path and other paths, serve the static assets
+    // This allows Cloudflare Workers Assets to handle the frontend
+    if (url.pathname === "/" || !url.pathname.startsWith("/api")) {
+      // Return a pass-through response to let Workers Assets handle it
+      // Assets are configured in wrangler.jsonc
+      return env.ASSETS.fetch(request);
     }
 
     return jsonResponse(
