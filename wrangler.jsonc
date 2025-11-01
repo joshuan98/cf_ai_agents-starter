@@ -1,9 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "my-chat-agent",
-  "main": "src/server.ts",
-  "compatibility_date": "2025-08-03",
+  "name": "ai-conversation-app",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-07",
   "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
   "ai": {
     "binding": "AI",
     "remote": true
@@ -11,18 +15,38 @@
   "assets": {
     "directory": "public"
   },
+  "kv_namespaces": [
+    {
+      "binding": "RATE_LIMITER",
+      "id": "0b509c12915e43c080fd04579daf3441"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "CONVERSATION_DB",
+      "database_name": "conversation_memory",
+      "database_id": "7d3a65fb-19ae-4cb7-bbf6-8423e21679a6"
+    }
+  ],
+  "workflows": [
+    {
+      "name": "conversation-workflow",
+      "binding": "CHAT_WORKFLOW",
+      "class_name": "ConversationWorkflow"
+    }
+  ],
   "durable_objects": {
     "bindings": [
       {
-        "name": "Chat",
-        "class_name": "Chat"
+        "name": "CHAT_AGENT",
+        "class_name": "ConversationalAgent"
       }
     ]
   },
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["Chat"]
+      "new_sqlite_classes": ["ConversationalAgent"]
     }
   ]
 }
